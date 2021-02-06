@@ -33,8 +33,6 @@ public:
         automatas.push_back(new MatcherAutomaton("Rules", RULES));
         automatas.push_back(new MatcherAutomaton("Queries", QUERIES));
         automatas.push_back(new StringAutomaton(STRING));
-        automatas.push_back(new CommentAutomaton(COMMENT));
-        automatas.push_back(new BlockCommentAutomaton(COMMENT));
         automatas.push_back(new IDAutomaton(ID));
 
     }
@@ -43,4 +41,6 @@ public:
 
     //Print all tokens in format and token count
     void print();
+
+    std::vector<Token *> getTokens();
 };

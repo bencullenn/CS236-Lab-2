@@ -2,8 +2,12 @@
 #include <fstream>
 #include "Token.h"
 #include "Lexer.h"
+#include "Parser.h"
 
 int main(int argc, char* argv[]) {
+    /*
+     * PART 1: LEXER
+     */
     //Create lexer
     Lexer lex = Lexer();
 
@@ -31,6 +35,14 @@ int main(int argc, char* argv[]) {
     //For each line in the input file call run on it
     lex.run(fileContents);
     // Call print from lexer
-    lex.print();
+    //lex.print();
+
+    /*
+     * PART 2: PARSER
+    */
+
+    //Create Parser
+    Parser parser = Parser(lex.getTokens());
+
     return 0;
 }

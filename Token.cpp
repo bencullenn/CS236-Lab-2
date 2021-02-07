@@ -5,6 +5,10 @@ std::string Token::toString() {
     return result;
 }
 
+TokenType Token::getType(){
+    return tokenType;
+};
+
 std::string Token::typeToString(TokenType type) {
     switch (type) {
         case COMMA: return "COMMA"; break;

@@ -33,8 +33,10 @@
             Token* newToken = maxAutomation->CreateToken(input.substr(0,maxRead), lineNumber);
             //increment lineNumber by maxAutomaton.NewLinesRead()
             lineNumber += maxAutomation->NewLinesRead();
-            //add newToken to collection of all tokens
-            tokens.push_back(newToken);
+            //add newToken to collection of all tokens unless it is a comment
+            if(newToken->getType() != COMMENT){
+                tokens.push_back(newToken);
+            }
         } else {
             // No automaton accepted input; create invalid token
             //set maxRead to 1

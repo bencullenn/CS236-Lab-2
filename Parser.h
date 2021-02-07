@@ -4,11 +4,14 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <string>
 #include "Token.h"
 
 
 class Parser {
 private:
+    Token* currentToken;
+    int currentIndex;
     std::vector<Token *> tokens;
     void parseDatalogProgram();
     void parseSchemeList();
@@ -28,6 +31,8 @@ private:
     void parseParameter();
     void parseExpression();
     void parseOperator();
+    bool match(TokenType toMatch);
+    void advanceInput();
 
 public:
     Parser(std::vector<Token *> tokens){
@@ -36,6 +41,8 @@ public:
         for(Token * tok:tokens){
             std::cout << tok->toString() << std::endl;
         }
+        currentIndex = 0;
+        currentToken = tokens[currentIndex];
     }
     void parse();
 };

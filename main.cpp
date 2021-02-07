@@ -44,5 +44,12 @@ int main(int argc, char* argv[]) {
     //Create Parser
     Parser parser = Parser(lex.getTokens());
 
+    try{
+        parser.parse();
+        std::cout << "Success!" << std::endl;
+    } catch (int e) {
+        std::cout << "Failure!" << std::endl;
+        std::cout << "Exception:" << e << std::endl;
+    }
     return 0;
 }

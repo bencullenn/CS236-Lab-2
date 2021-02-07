@@ -22,4 +22,5 @@ public:
 
     std::string toString();
     std::string typeToString(TokenType type);
+    TokenType getType();
 };

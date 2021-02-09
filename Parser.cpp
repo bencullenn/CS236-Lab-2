@@ -90,7 +90,19 @@ void Parser::parseRuleList(){
 };
 
 void Parser::parseQueryList(){
-    //FOLLOW(queryList) = {EOF}
+    //FIRST(queryList) = {ID}
+    if(checkCurrent(ID)) {
+        parseQuery();
+        parseQueryList();
+
+        //FOLLOW(queryList) = {EOF}
+    } else if (checkCurrent(ENDOFFILE)) {
+        //Return for lambda
+        return;
+    } else {
+        //Throw exception
+        throw (-1);
+    }
 };
 void Parser::parseScheme(){
     //FIRST(scheme) = {ID}
@@ -124,7 +136,8 @@ void Parser::parseRule(){
 };
 
 void Parser::parseQuery(){
-
+    parsePredicate();
+    match(Q_MARK);
 };
 
 void Parser::parseHeadPredicate(){

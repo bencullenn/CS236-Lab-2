@@ -43,11 +43,8 @@ void Parser::parseDatalogProgram(){
 void Parser::parseSchemeList(){
     //FIRST(schemeList) = {ID}
     if (checkCurrent(ID)){
-        match(ID);
-        match(LEFT_PAREN);
-        match(ID);
-        parseIdList();
-        match(RIGHT_PAREN);
+        parseScheme();
+        parseSchemeList();
 
         //FOLLOW(schemeList) = {FACTS}
     } else if(checkCurrent(FACTS)){

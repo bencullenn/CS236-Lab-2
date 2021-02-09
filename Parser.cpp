@@ -49,8 +49,8 @@ void Parser::parseSchemeList(){
         parseIdList();
         match(RIGHT_PAREN);
 
-        //FOLLOW(schemeList) = {Rules}
-    } else if(checkCurrent(RULES)){
+        //FOLLOW(schemeList) = {FACTS}
+    } else if(checkCurrent(FACTS)){
         //Return for lambda
         return;
     } else {
@@ -60,7 +60,18 @@ void Parser::parseSchemeList(){
 };
 
 void Parser::parseFactList(){
-    //FOLLOW(factList) = {Factlist}
+    //FIRST(factList) = {ID}
+    if(checkCurrent(ID)){
+        parseFact();
+        parseFactList();
+        //FOLLOW(factList) = {RULES}
+    } else if(checkCurrent(RULES)) {
+        //Return for lambda
+        return;
+    } else {
+        //Throw exception
+        throw(-1);
+    }
 };
 
 void Parser::parseRuleList(){
@@ -85,7 +96,12 @@ void Parser::parseScheme(){
 };
 
 void Parser::parseFact(){
-
+    match(ID);
+    match(LEFT_PAREN);
+    match(STRING);
+    parseStringList();
+    match(RIGHT_PAREN);
+    match(PERIOD);
 };
 
 void Parser::parseRule(){
@@ -113,7 +129,19 @@ void Parser::parseParameterList(){
 };
 
 void Parser::parseStringList(){
-    //FOLLOW(stringList) = {RIGHT_PAREN}
+    //FIRST(stringList) = {COMMA}
+    if(checkCurrent(COMMA)){
+        match(COMMA);
+        match(STRING);
+        parseStringList();
+        //FOLLOW(stringList) = {RIGHT_PAREN}
+    } else if(checkCurrent(RIGHT_PAREN)){
+        //Return for lambda
+        return;
+    } else {
+        //Throw exeption
+        throw(-1);
+    }
 };
 
 void Parser::parseIdList(){
@@ -154,7 +182,7 @@ void Parser::match(TokenType toMatch){
        advanceInput();
    } else {
        //Throw execption
-       std::cout  << currentToken->typeToString(currentToken->getType());
+       //std::cout  << currentToken->typeToString(currentToken->getType());
        //std::cout << " did not match " << currentToken->typeToString(toMatch) << std::endl;
        throw (-1);
    }

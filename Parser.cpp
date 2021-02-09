@@ -25,7 +25,7 @@ void Parser::parseDatalogProgram(){
     match(COLON);
     parseFactList();
 
-    //Rules
+    //Rule
     match(RULES);
     match(COLON);
     parseRuleList();

@@ -54,7 +54,7 @@ void Parser::parseSchemeList(){
         //Return for lambda
         return;
     } else {
-        //Throw exeption
+        //Throw exception
         throw(-1);
     }
 };
@@ -75,7 +75,18 @@ void Parser::parseFactList(){
 };
 
 void Parser::parseRuleList(){
-    //FOLLOW(ruleList) = {Queries}
+    //FIRST(ruleList) = {ID}
+    if(checkCurrent(ID)){
+        parseRule();
+        parseRuleList();
+        //FOLLOW(ruleList) = {Queries}
+    } else if(checkCurrent(QUERIES)){
+        //Return for lambda
+        return;
+    } else {
+        //Throw exception
+        throw(-1);
+    }
 };
 
 void Parser::parseQueryList(){
@@ -105,7 +116,11 @@ void Parser::parseFact(){
 };
 
 void Parser::parseRule(){
-
+    parseHeadPredicate();
+    match(COLON_DASH);
+    parsePredicate();
+    parsePredicateList();
+    match(PERIOD);
 };
 
 void Parser::parseQuery(){
@@ -113,19 +128,51 @@ void Parser::parseQuery(){
 };
 
 void Parser::parseHeadPredicate(){
-
+    match(ID);
+    match(LEFT_PAREN);
+    match(ID);
+    parseIdList();
+    match(RIGHT_PAREN);
 };
 
 void Parser::parsePredicate(){
-
+    match(ID);
+    match(LEFT_PAREN);
+    parseParameter();
+    parseParameterList();
+    match(RIGHT_PAREN);
 };
 
 void Parser::parsePredicateList(){
-    //FOLLOW(predicateList) = {PERIOD}
+    //FIRST(predicateList) = {COMMA}
+    if(checkCurrent(COMMA)){
+        match(COMMA);
+        parsePredicate();
+        parsePredicateList();
+        //FOLLOW(predicateList) = {PERIOD}
+    } else if (checkCurrent(PERIOD)) {
+        //Return for lambda
+        return;
+    } else {
+        //Throw exception
+        throw(-1);
+    }
 };
 
 void Parser::parseParameterList(){
-    //FOLLOW(paramaterList) = {RIGHT_PAREN}
+    //FIRST(paramaterList)  = {COMMA}
+    if(checkCurrent(COMMA)){
+        match(COMMA);
+        parseParameter();
+        parseParameterList();
+        //FOLLOW(paramaterList) = {RIGHT_PAREN}
+    } else if(checkCurrent(RIGHT_PAREN)){
+        //Return for lambda
+        return;
+    } else {
+        //Throw exception
+        throw(-1);
+    }
 };
 
 void Parser::parseStringList(){
@@ -139,7 +186,7 @@ void Parser::parseStringList(){
         //Return for lambda
         return;
     } else {
-        //Throw exeption
+        //Throw exception
         throw(-1);
     }
 };
@@ -162,15 +209,37 @@ void Parser::parseIdList(){
 };
 
 void Parser::parseParameter(){
+    if(checkCurrent(STRING)){
+        match(STRING);
+    } else if (checkCurrent(ID)) {
+        match(ID);
 
+        //FIRST(expression) = {LEFT_PAREN}
+    } else if (checkCurrent(LEFT_PAREN)) {
+        parseExpression();
+    } else {
+        //Throw exception
+        throw (-1);
+    }
 };
 
 void Parser::parseExpression(){
-
+    match(LEFT_PAREN);
+    parseParameter();
+    parseOperator();
+    parseParameter();
+    match(RIGHT_PAREN);
 };
 
 void Parser::parseOperator(){
-
+    if(checkCurrent(ADD)){
+        match(ADD);
+    } else if (checkCurrent(MULTIPLY)) {
+        match(MULTIPLY);
+    } else {
+        //throw exception
+        throw(-1);
+    }
 };
 
 void Parser::match(TokenType toMatch){

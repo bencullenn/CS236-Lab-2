@@ -5,5 +5,8 @@
 
 
 class Parameter {
+public:
+    Parameter(){
 
+    };
 };

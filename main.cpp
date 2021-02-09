@@ -49,6 +49,7 @@ int main(int argc, char* argv[]) {
         std::cout << "Success!" << std::endl;
     } catch (int e) {
         std::cout << "Failure!" << std::endl;
+        std::cout << "Failed on token " << parser.getCurrentToken()->toString() << std::endl;
         std::cout << "Exception:" << e << std::endl;
     }
     return 0;

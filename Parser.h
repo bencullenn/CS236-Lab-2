@@ -31,8 +31,9 @@ private:
     void parseParameter();
     void parseExpression();
     void parseOperator();
-    bool match(TokenType toMatch);
+    void match(TokenType toMatch);
     void advanceInput();
+    bool checkCurrent(TokenType toCheck);
 
 public:
     Parser(std::vector<Token *> tokens){
@@ -45,4 +46,5 @@ public:
         currentToken = tokens[currentIndex];
     }
     void parse();
+    Token * getCurrentToken();
 };

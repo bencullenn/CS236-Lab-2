@@ -41,22 +41,47 @@ void Parser::parseDatalogProgram(){
 };
 
 void Parser::parseSchemeList(){
+    //FIRST(schemeList) = {ID}
+    if (checkCurrent(ID)){
+        match(ID);
+        match(LEFT_PAREN);
+        match(ID);
+        parseIdList();
+        match(RIGHT_PAREN);
 
+        //FOLLOW(schemeList) = {Rules}
+    } else if(checkCurrent(RULES)){
+        //Return for lambda
+        return;
+    } else {
+        //Throw exeption
+        throw(-1);
+    }
 };
 
 void Parser::parseFactList(){
-
+    //FOLLOW(factList) = {Factlist}
 };
 
 void Parser::parseRuleList(){
-
+    //FOLLOW(ruleList) = {Queries}
 };
 
 void Parser::parseQueryList(){
-
+    //FOLLOW(queryList) = {EOF}
 };
 void Parser::parseScheme(){
-
+    //FIRST(scheme) = {ID}
+    if(checkCurrent(ID)) {
+        match(ID);
+        match(LEFT_PAREN);
+        match(ID);
+        parseIdList();
+        match(RIGHT_PAREN);
+    } else {
+        //Throw exception
+        throw (-1);
+    }
 };
 
 void Parser::parseFact(){
@@ -80,19 +105,32 @@ void Parser::parsePredicate(){
 };
 
 void Parser::parsePredicateList(){
-
+    //FOLLOW(predicateList) = {PERIOD}
 };
 
 void Parser::parseParameterList(){
-
+    //FOLLOW(paramaterList) = {RIGHT_PAREN}
 };
 
 void Parser::parseStringList(){
-
+    //FOLLOW(stringList) = {RIGHT_PAREN}
 };
 
 void Parser::parseIdList(){
+    //FIRST(idList) = {COMMA}
+    if(checkCurrent(COMMA)){
+        match(COMMA);
+        match(ID);
+        parseIdList();
 
+        //FOLLOW(idList) = {RIGHT_PAREN}
+    } else if (checkCurrent(RIGHT_PAREN)){
+        //Return for lambda
+        return;
+    } else {
+        //Throw execution
+        throw(-1);
+    }
 };
 
 void Parser::parseParameter(){
@@ -107,7 +145,7 @@ void Parser::parseOperator(){
 
 };
 
-bool Parser::match(TokenType toMatch){
+void Parser::match(TokenType toMatch){
     //std::cout << "Current Type:" << currentType  << std::endl;
     //std::cout << "Type to match:" << toMatchString << std::endl;
    if(currentToken->getType() == toMatch){
@@ -116,7 +154,7 @@ bool Parser::match(TokenType toMatch){
        advanceInput();
    } else {
        //Throw execption
-       //std::cout  << currentToken->typeToString(currentToken->getType());
+       std::cout  << currentToken->typeToString(currentToken->getType());
        //std::cout << " did not match " << currentToken->typeToString(toMatch) << std::endl;
        throw (-1);
    }
@@ -125,4 +163,16 @@ bool Parser::match(TokenType toMatch){
 void Parser::advanceInput(){
     currentIndex += 1;
     currentToken = tokens[currentIndex];
+};
+
+bool Parser::checkCurrent(TokenType toCheck){
+    if(currentToken->getType() == toCheck){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+Token * Parser::getCurrentToken(){
+    return currentToken;
 };

@@ -3,6 +3,7 @@
 //
 #pragma once
 #include <string>
+#include <iostream>
 #include "Parameter.h"
 
 class TextParameter: public Parameter {
@@ -12,6 +13,7 @@ public:
         this->data = data;
     };
 
+    void toString();
 };
 
 

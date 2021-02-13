@@ -3,6 +3,7 @@
 //
 #pragma once
 #include <string>
+#include <iostream>
 #include "Parameter.h"
 #include "TextParameter.h"
 
@@ -16,5 +17,7 @@ public:
         this->operand = operand;
         this->rightArg = rightArg;
     };
+
+    std::string toString();
 };
 

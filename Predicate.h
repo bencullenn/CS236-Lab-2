@@ -14,4 +14,9 @@ public:
       this->name = "";
       this->paramaters = std::vector<Parameter*>();
     };
+
+    void setName(std::string name);
+    void setParameters(std::vector<Parameter*> parameters);
+    void addParameter(Parameter* parameter);
+    void toString();
 };

@@ -13,7 +13,7 @@ public:
         this->data = data;
     };
 
-    void toString();
+    std::string toString();
 };
 
 

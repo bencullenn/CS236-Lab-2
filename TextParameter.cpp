@@ -3,6 +3,6 @@
 //
 
 #include "TextParameter.h"
-void TextParameter::toString(){
-    std::cout << data << std::endl;
+std::string TextParameter::toString(){
+    return data;
 };

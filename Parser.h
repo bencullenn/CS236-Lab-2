@@ -19,33 +19,35 @@ private:
     std::vector<Token *> tokens;
     DatalogProgram parseDatalogProgram();
     std::vector<Predicate *> parseSchemeList();
-    void parseFactList();
+    std::vector<Predicate *> parseFactList();
     void parseRuleList();
     void parseQueryList();
     Predicate* parseScheme();
-    void parseFact();
+    Predicate* parseFact();
     void parseRule();
     void parseQuery();
     void parseHeadPredicate();
     void parsePredicate();
     void parsePredicateList();
     void parseParameterList();
-    void parseStringList();
+    std::vector<Parameter*> parseStringList();
     std::vector<Parameter*> parseIdList();
     void parseParameter();
     void parseExpression();
     void parseOperator();
     void match(TokenType toMatch);
     void advanceInput();
-    bool checkCurrent(TokenType toCheck);
+    bool peek(TokenType toCheck);
+    void checkCurrent(TokenType toMatch);
 
 public:
     Parser(std::vector<Token *> tokens){
         this->tokens = tokens;
         //Print all tokens
+        /*
         for(Token * tok:tokens){
             std::cout << tok->toString() << std::endl;
-        }
+        }*/
         currentIndex = 0;
         currentToken = tokens[currentIndex];
     }

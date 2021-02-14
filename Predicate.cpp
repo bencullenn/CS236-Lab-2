@@ -28,11 +28,11 @@ std::string Predicate::toString(){
     for(int i = 0; i < this->parameters.size(); i++){
         result += this->parameters[i]->toString();
 
-        if(i == this->parameters.size()-2){
+        if(i == this->parameters.size()-1){
             //If it's the last element
             result+=")";
         } else {
-            result += ", ";
+            result += ",";
         }
     }
 

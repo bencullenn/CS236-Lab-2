@@ -120,9 +120,13 @@ Predicate* Parser::parseScheme(){
 
         match(ID);
         match(LEFT_PAREN);
+        //Make sure that first ID is included in parameters
+        checkCurrent(ID); //Will fail if ID is not present
+        Parameter* firstID = new TextParameter(currentToken->value);
         match(ID);
 
         std::vector<Parameter*> p_vec = parseIdList();
+        p_vec.push_back(firstID);
         std::reverse(p_vec.begin(),p_vec.end());
 
         pred->setParameters(p_vec);
@@ -229,10 +233,11 @@ std::vector<Parameter*> Parser::parseIdList(){
         match(COMMA);
         checkCurrent(ID); //Will throw exception if there is no ID to extract
         Parameter * p = new TextParameter(currentToken->value);
+        std::cout << "Paramater added:" << p->toString() << std::endl;
         match(ID);
         std::vector<Parameter*> p_vec = parseIdList();
         p_vec.push_back(p);
-        //std::cout << "Parameter count:" << std::to_string(p_vec.size()) << std::endl;
+        std::cout << "Parameter count:" << std::to_string(p_vec.size()) << std::endl;
         return p_vec;
         //FOLLOW(idList) = {RIGHT_PAREN}
     } else if (checkCurrent(RIGHT_PAREN)){

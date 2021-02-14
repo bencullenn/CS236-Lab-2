@@ -8,12 +8,12 @@ std::string DatalogProgram::toString() {
     std::string result = "";
     result += "Schemes(" + std::to_string(schemes.size()) + "):\n";
     for(Predicate* scheme:schemes){
-        result += (scheme->toString() + "\n");
+        result += (" " + scheme->toString() + "\n");
     }
 
     result += "Facts(" + std::to_string(facts.size()) + "):\n";
     for(Predicate* fact:facts){
-        result += (fact->toString() + "\n");
+        result += (" " + fact->toString() + "\n");
     }
 
     /*
@@ -24,12 +24,7 @@ std::string DatalogProgram::toString() {
 
     result += "Queries(" + std::to_string(queries.size()) + "):\n";
     for(Predicate* query:queries){
-        result += (query->toString() + "\n");
-    }
-
-    result += "Queries(" + std::to_string(queries.size()) + "):\n";
-    for(Predicate* query:queries){
-        result += (query->toString() + "\n");
+        result += (" " + query->toString() + "\n");
     }
 
     result += "Domain(" + std::to_string(domain.size()) + "):\n";

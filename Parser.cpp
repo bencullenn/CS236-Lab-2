@@ -4,21 +4,26 @@
 
 #include "Parser.h"
 
-void Parser::parse(){
-    parseDatalogProgram();
+DatalogProgram Parser::parse(){
+    return parseDatalogProgram();
 };
 
-void Parser::parseDatalogProgram(){
+DatalogProgram Parser::parseDatalogProgram(){
     /*
      * datalogProgram	->	SCHEMES COLON scheme schemeList FACTS COLON
      * factList RULES COLON ruleList QUERIES COLON query queryList EOF
      */
-
+    DatalogProgram program = DatalogProgram();
     //Schemes
     match(SCHEMES);
     match(COLON);
-    parseScheme();
-    parseSchemeList();
+    Predicate * scheme  = parseScheme();
+    std::vector<Predicate *> scheme_vec = parseSchemeList();
+
+    scheme_vec.push_back(scheme);
+    std::reverse(scheme_vec.begin(), scheme_vec.end());
+
+    program.schemes = scheme_vec;
 
     // Facts
     match(FACTS);
@@ -38,18 +43,24 @@ void Parser::parseDatalogProgram(){
 
     //EOF
     match(ENDOFFILE);
+
+    return program;
 };
 
-void Parser::parseSchemeList(){
+std::vector<Predicate *> Parser::parseSchemeList(){
     //FIRST(schemeList) = {ID}
     if (checkCurrent(ID)){
-        parseScheme();
-        parseSchemeList();
+        Predicate * pred  = parseScheme();
+        std::vector<Predicate *> pred_vec = parseSchemeList();
 
+        pred_vec.push_back(pred);
+        std::reverse(pred_vec.begin(),pred_vec.end());
+
+        return pred_vec;
         //FOLLOW(schemeList) = {FACTS}
     } else if(checkCurrent(FACTS)){
         //Return for lambda
-        return;
+        return std::vector<Predicate *>();
     } else {
         //Throw exception
         throw(-1);
@@ -101,14 +112,25 @@ void Parser::parseQueryList(){
         throw (-1);
     }
 };
-void Parser::parseScheme(){
+Predicate* Parser::parseScheme(){
     //FIRST(scheme) = {ID}
     if(checkCurrent(ID)) {
+        Predicate * pred = new Predicate();
+        pred->setName(currentToken->value);
+
         match(ID);
         match(LEFT_PAREN);
         match(ID);
-        parseIdList();
+
+        std::vector<Parameter*> p_vec = parseIdList();
+        std::reverse(p_vec.begin(),p_vec.end());
+
+        pred->setParameters(p_vec);
         match(RIGHT_PAREN);
+
+        //std::cout << "Predicate Name:" << pred->name << std::endl;
+        //std::cout << "Parameter Count:" << std::to_string(pred->paramaters.size()) << std::endl;
+        return pred;
     } else {
         //Throw exception
         throw (-1);
@@ -201,17 +223,21 @@ void Parser::parseStringList(){
     }
 };
 
-void Parser::parseIdList(){
+std::vector<Parameter*> Parser::parseIdList(){
     //FIRST(idList) = {COMMA}
     if(checkCurrent(COMMA)){
         match(COMMA);
+        checkCurrent(ID); //Will throw exception if there is no ID to extract
+        Parameter * p = new TextParameter(currentToken->value);
         match(ID);
-        parseIdList();
-
+        std::vector<Parameter*> p_vec = parseIdList();
+        p_vec.push_back(p);
+        //std::cout << "Parameter count:" << std::to_string(p_vec.size()) << std::endl;
+        return p_vec;
         //FOLLOW(idList) = {RIGHT_PAREN}
     } else if (checkCurrent(RIGHT_PAREN)){
-        //Return for lambda
-        return;
+        //Return for empty vector lambda
+        return std::vector<Parameter *>();
     } else {
         //Throw execution
         throw(-1);

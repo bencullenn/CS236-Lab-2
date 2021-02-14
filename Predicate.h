@@ -9,14 +9,14 @@
 class Predicate {
 public:
     std::string name;
-    std::vector<Parameter*> paramaters;
+    std::vector<Parameter*> parameters;
     Predicate(){
       this->name = "";
-      this->paramaters = std::vector<Parameter*>();
+      this->parameters = std::vector<Parameter*>();
     };
 
     void setName(std::string name);
     void setParameters(std::vector<Parameter*> parameters);
     void addParameter(Parameter* parameter);
-    void toString();
+    std::string toString();
 };

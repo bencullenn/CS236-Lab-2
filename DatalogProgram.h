@@ -8,14 +8,19 @@
 
 class DatalogProgram {
 public:
-    std::vector<Predicate *>schemes;
-    std::vector<Predicate *>queries;
-    std::vector<Predicate *>facts;
+    std::vector<Predicate *> schemes;
+    std::vector<Predicate *> queries;
+    std::vector<Predicate *> facts;
+    std::vector<std::string> domain;
 
     DatalogProgram(){
       this->schemes = std::vector<Predicate *>();
       this->queries = std::vector<Predicate *>();
       this->facts = std::vector<Predicate *>();
+      this->domain = std::vector<std::string>();
     };
+
+    std::string toString();
+    void calculateDomain();
 };
 

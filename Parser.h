@@ -5,20 +5,24 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include "DatalogProgram.h"
 #include "Token.h"
-
+#include "Predicate.h"
+#include "Parameter.h"
+#include "TextParameter.h"
+#include "ExpressionParameter.h"
 
 class Parser {
 private:
     Token* currentToken;
     int currentIndex;
     std::vector<Token *> tokens;
-    void parseDatalogProgram();
-    void parseSchemeList();
+    DatalogProgram parseDatalogProgram();
+    std::vector<Predicate *> parseSchemeList();
     void parseFactList();
     void parseRuleList();
     void parseQueryList();
-    void parseScheme();
+    Predicate* parseScheme();
     void parseFact();
     void parseRule();
     void parseQuery();
@@ -27,7 +31,7 @@ private:
     void parsePredicateList();
     void parseParameterList();
     void parseStringList();
-    void parseIdList();
+    std::vector<Parameter*> parseIdList();
     void parseParameter();
     void parseExpression();
     void parseOperator();
@@ -45,6 +49,6 @@ public:
         currentIndex = 0;
         currentToken = tokens[currentIndex];
     }
-    void parse();
+    DatalogProgram parse();
     Token * getCurrentToken();
 };

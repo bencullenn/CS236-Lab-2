@@ -45,8 +45,9 @@ int main(int argc, char* argv[]) {
     Parser parser = Parser(lex.getTokens());
 
     try{
-        parser.parse();
+        DatalogProgram program = parser.parse();
         std::cout << "Success!" << std::endl;
+        std::cout << program.toString() << std::endl;
     } catch (int e) {
         std::cout << "Failure!" << std::endl;
         std::cout << "Failed on token " << parser.getCurrentToken()->toString() << std::endl;

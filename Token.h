@@ -9,11 +9,11 @@ enum TokenType {
 
 
 class Token {
+public:
     std::string value;
     int lineNum;
     TokenType tokenType;
 
-public:
     Token(TokenType type, std::string strValue, int LNum){
         tokenType = type;
         lineNum = LNum;

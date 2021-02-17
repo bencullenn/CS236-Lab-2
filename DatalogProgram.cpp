@@ -8,23 +8,23 @@ std::string DatalogProgram::toString() {
     std::string result = "";
     result += "Schemes(" + std::to_string(schemes.size()) + "):\n";
     for(Predicate* scheme:schemes){
-        result += (" " + scheme->toString() + "\n");
+        result += ("  " + scheme->toString() + "\n");
     }
 
     result += "Facts(" + std::to_string(facts.size()) + "):\n";
     for(Predicate* fact:facts){
-        result += (" " + fact->toString() + ".\n");
+        result += ("  " + fact->toString() + ".\n");
     }
 
-    /*
-    result += "Rules(" + rules.size() + "):\n";
-    for(Predicate* rule:rules){
-        result += (rules.toString() + "\n");
-    }*/
+
+    result += "Rules(" + std::to_string(rules.size()) + "):\n";
+    for(Rule* rule:rules){
+        result += (rule->toString() + "\n");
+    }
 
     result += "Queries(" + std::to_string(queries.size()) + "):\n";
     for(Predicate* query:queries){
-        result += (" " + query->toString() + "?\n");
+        result += ("  " + query->toString() + "?\n");
     }
 
     calculateDomain();

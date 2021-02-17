@@ -11,6 +11,7 @@
 #include "Parameter.h"
 #include "TextParameter.h"
 #include "ExpressionParameter.h"
+#include "Rule.h"
 
 class Parser {
 private:
@@ -20,13 +21,13 @@ private:
     DatalogProgram parseDatalogProgram();
     std::vector<Predicate *> parseSchemeList();
     std::vector<Predicate *> parseFactList();
-    void parseRuleList();
+    std::vector<Rule *> parseRuleList();
     std::vector<Predicate *> parseQueryList();
     Predicate* parseScheme();
     Predicate* parseFact();
-    void parseRule();
+    Rule* parseRule();
     Predicate* parseQuery();
-    void parseHeadPredicate();
+    Predicate* parseHeadPredicate();
     Predicate* parsePredicate();
     std::vector<Predicate *> parsePredicateList();
     std::vector<Parameter*> parseParameterList();

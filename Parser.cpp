@@ -34,7 +34,9 @@ DatalogProgram Parser::parseDatalogProgram(){
     //Rule
     match(RULES);
     match(COLON);
-    parseRuleList();
+    std::vector<Rule*> rules_vec = parseRuleList();
+    std::reverse(rules_vec.begin(), rules_vec.end());
+    program.rules = rules_vec;
 
     //Queries
     match(QUERIES);
@@ -90,15 +92,17 @@ std::vector<Predicate *> Parser::parseFactList(){
     }
 };
 
-void Parser::parseRuleList(){
+std::vector<Rule *> Parser::parseRuleList(){
     //FIRST(ruleList) = {ID}
     if(peek(ID)){
-        parseRule();
-        parseRuleList();
+        Rule* rule = parseRule();
+        std::vector<Rule *> rules_vec = parseRuleList();
+        rules_vec.push_back(rule);
+        return rules_vec;
         //FOLLOW(ruleList) = {Queries}
     } else if(peek(QUERIES)){
         //Return for lambda
-        return;
+        return std::vector<Rule *>();
     } else {
         //Throw exception
         throw(-1);
@@ -178,12 +182,20 @@ Predicate* Parser::parseFact(){
     }
 };
 
-void Parser::parseRule(){
-    parseHeadPredicate();
+Rule* Parser::parseRule(){
+    Rule * rule = new Rule();
+    rule->setHeadPredicate(parseHeadPredicate());
+
     match(COLON_DASH);
-    parsePredicate();
-    parsePredicateList();
+
+    Predicate* predicate = parsePredicate();
+    std::vector<Predicate*> p_vec = parsePredicateList();
+    p_vec.push_back(predicate);
+    std::reverse(p_vec.begin(), p_vec.end());
+    rule->setPredicates(p_vec);
+
     match(PERIOD);
+    return rule;
 };
 
 Predicate* Parser::parseQuery(){
@@ -192,12 +204,21 @@ Predicate* Parser::parseQuery(){
     return pred;
 };
 
-void Parser::parseHeadPredicate(){
+Predicate* Parser::parseHeadPredicate(){
+    Predicate * predicate = new Predicate();
+    checkCurrent(ID); // Will throw exception if current token is not ID
+    predicate->setName(currentToken->value);
     match(ID);
     match(LEFT_PAREN);
+    checkCurrent(ID);
+    Parameter * firstParameter = new TextParameter(currentToken->value);
     match(ID);
-    parseIdList();
+    std::vector<Parameter*> id_vec = parseIdList();
+    id_vec.push_back(firstParameter);
+    std::reverse(id_vec.begin(),id_vec.end());
+    predicate->setParameters(id_vec);
     match(RIGHT_PAREN);
+    return predicate;
 };
 
 Predicate* Parser::parsePredicate(){

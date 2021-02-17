@@ -38,15 +38,13 @@ std::string DatalogProgram::toString() {
 }
 
 void DatalogProgram::calculateDomain(){
-    std::vector<std::string> domain = std::vector<std::string>();
+    std::set<std::string> domain = std::set<std::string>();
 
     for(Predicate* fact:facts){
         for(Parameter * string:fact->parameters){
-            domain.push_back(string->toString());
+            domain.insert(string->toString());
         }
     }
-
-    std::sort(domain.begin(), domain.end());
 
     this->domain = domain;
 };

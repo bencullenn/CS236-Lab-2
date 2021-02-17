@@ -19,7 +19,7 @@ std::string DatalogProgram::toString() {
 
     result += "Rules(" + std::to_string(rules.size()) + "):\n";
     for(Rule* rule:rules){
-        result += (rule->toString() + "\n");
+        result += ("  " + rule->toString() + "\n");
     }
 
     result += "Queries(" + std::to_string(queries.size()) + "):\n";
@@ -30,8 +30,12 @@ std::string DatalogProgram::toString() {
     calculateDomain();
 
     result += "Domain(" + std::to_string(domain.size()) + "):\n";
-    for(std::string string:domain){
-        result += ( string + "\n");
+    //std::set<unsigned long>::iterator it;
+    for(auto it = domain.begin(); it != domain.end(); it++){
+        result += "  " + *it;
+        if(it != domain.end()){
+            result += "\n";
+        }
     }
 
     return result;

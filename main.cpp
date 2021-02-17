@@ -47,11 +47,11 @@ int main(int argc, char* argv[]) {
     try{
         DatalogProgram program = parser.parse();
         std::cout << "Success!" << std::endl;
-        std::cout << program.toString() << std::endl;
+        std::cout << program.toString();
     } catch (int e) {
         std::cout << "Failure!" << std::endl;
-        std::cout << "Failed on token " << parser.getCurrentToken()->toString() << std::endl;
-        std::cout << "Exception:" << e << std::endl;
+        //std::cout << "Failed on token " << parser.getCurrentToken()->toString() << std::endl;
+        std::cout << "  " + parser.getCurrentToken()->toString() << std::endl;
     }
     return 0;
 }

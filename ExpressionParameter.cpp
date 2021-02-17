@@ -5,5 +5,5 @@
 #include "ExpressionParameter.h"
 
 std::string ExpressionParameter::toString(){
-    return leftArg + " " + operand + " " + rightArg;
+    return "(" + leftArg + " " + operand + " " + rightArg + ")";
 };

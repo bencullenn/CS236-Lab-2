@@ -27,20 +27,26 @@ std::string DatalogProgram::toString() {
         result += (" " + query->toString() + "?\n");
     }
 
+    calculateDomain();
+
     result += "Domain(" + std::to_string(domain.size()) + "):\n";
     for(std::string string:domain){
-        result += ("\'" + string + "\'\n");
+        result += ( string + "\n");
     }
 
     return result;
 }
 
 void DatalogProgram::calculateDomain(){
-    this->domain = std::vector<std::string>();
+    std::vector<std::string> domain = std::vector<std::string>();
 
     for(Predicate* fact:facts){
         for(Parameter * string:fact->parameters){
-            this->domain.push_back(string->toString());
+            domain.push_back(string->toString());
         }
     }
+
+    std::sort(domain.begin(), domain.end());
+
+    this->domain = domain;
 };

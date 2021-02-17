@@ -39,8 +39,12 @@ DatalogProgram Parser::parseDatalogProgram(){
     //Queries
     match(QUERIES);
     match(COLON);
-    parseQuery();
-    parseQueryList();
+    Predicate * query  = parseQuery();
+    std::vector<Predicate *> query_vec = parseQueryList();
+
+    query_vec.push_back(query);
+    std::reverse(query_vec.begin(), query_vec.end());
+    program.queries = query_vec;
 
     //EOF
     match(ENDOFFILE);
@@ -101,16 +105,19 @@ void Parser::parseRuleList(){
     }
 };
 
-void Parser::parseQueryList(){
+std::vector<Predicate *> Parser::parseQueryList(){
     //FIRST(queryList) = {ID}
     if(peek(ID)) {
-        parseQuery();
-        parseQueryList();
+        Predicate * query = parseQuery();
+        std::vector<Predicate *> query_vec = parseQueryList();
+
+        query_vec.push_back(query);
+        return query_vec;
 
         //FOLLOW(queryList) = {EOF}
     } else if (peek(ENDOFFILE)) {
         //Return for lambda
-        return;
+        return std::vector<Predicate *>();
     } else {
         //Throw exception
         throw (-1);
@@ -179,9 +186,10 @@ void Parser::parseRule(){
     match(PERIOD);
 };
 
-void Parser::parseQuery(){
-    parsePredicate();
+Predicate* Parser::parseQuery(){
+    Predicate* pred = parsePredicate();
     match(Q_MARK);
+    return pred;
 };
 
 void Parser::parseHeadPredicate(){
@@ -192,40 +200,56 @@ void Parser::parseHeadPredicate(){
     match(RIGHT_PAREN);
 };
 
-void Parser::parsePredicate(){
+Predicate* Parser::parsePredicate(){
+    Predicate * pred = new Predicate();
+    checkCurrent(ID); // Will throw exception if current token is not ID
+    pred->setName(currentToken->value);
+
     match(ID);
     match(LEFT_PAREN);
-    parseParameter();
-    parseParameterList();
+
+    Parameter * parameter = parseParameter();
+    std::vector<Parameter*> p_vec = parseParameterList();
+    p_vec.push_back(parameter);
+    std::reverse(p_vec.begin(),p_vec.end());
+    pred->setParameters(p_vec);
+
     match(RIGHT_PAREN);
+    return pred;
 };
 
-void Parser::parsePredicateList(){
+std::vector<Predicate *> Parser::parsePredicateList(){
     //FIRST(predicateList) = {COMMA}
     if(peek(COMMA)){
         match(COMMA);
-        parsePredicate();
-        parsePredicateList();
+        Predicate* pred = parsePredicate();
+        std::vector<Predicate*> p_vec = parsePredicateList();
+
+        p_vec.push_back(pred);
+        return p_vec;
         //FOLLOW(predicateList) = {PERIOD}
     } else if (peek(PERIOD)) {
         //Return for lambda
-        return;
+        return std::vector<Predicate*>();
     } else {
         //Throw exception
         throw(-1);
     }
 };
 
-void Parser::parseParameterList(){
+std::vector<Parameter*> Parser::parseParameterList(){
     //FIRST(paramaterList)  = {COMMA}
     if(peek(COMMA)){
         match(COMMA);
-        parseParameter();
-        parseParameterList();
+        Parameter * parameter = parseParameter();
+        std::vector<Parameter*> p_vec = parseParameterList();
+        p_vec.push_back(parameter);
+        return p_vec;
+
         //FOLLOW(paramaterList) = {RIGHT_PAREN}
     } else if(peek(RIGHT_PAREN)){
         //Return for lambda
-        return;
+        return std::vector<Parameter*>();
     } else {
         //Throw exception
         throw(-1);
@@ -275,34 +299,44 @@ std::vector<Parameter*> Parser::parseIdList(){
     }
 };
 
-void Parser::parseParameter(){
+Parameter* Parser::parseParameter(){
     if(peek(STRING)){
+        Parameter * p = new TextParameter(currentToken->value);
         match(STRING);
+        return p;
     } else if (peek(ID)) {
+        Parameter * p = new TextParameter(currentToken->value);
         match(ID);
+        return p;
 
         //FIRST(expression) = {LEFT_PAREN}
     } else if (peek(LEFT_PAREN)) {
-        parseExpression();
+        return parseExpression();
     } else {
         //Throw exception
         throw (-1);
     }
 };
 
-void Parser::parseExpression(){
+Parameter* Parser::parseExpression(){
     match(LEFT_PAREN);
-    parseParameter();
-    parseOperator();
-    parseParameter();
+    Parameter* left = parseParameter();
+    std::string opr = parseOperator();
+    Parameter* right = parseParameter();
+    ExpressionParameter* exp = new ExpressionParameter(left->toString(), opr, right->toString());
     match(RIGHT_PAREN);
+    return exp;
 };
 
-void Parser::parseOperator(){
+std::string Parser::parseOperator(){
     if(peek(ADD)){
+        std::string value = currentToken->value;
         match(ADD);
+        return value;
     } else if (peek(MULTIPLY)) {
+        std::string value = currentToken->value;
         match(MULTIPLY);
+        return value;
     } else {
         //throw exception
         throw(-1);

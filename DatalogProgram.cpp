@@ -13,7 +13,7 @@ std::string DatalogProgram::toString() {
 
     result += "Facts(" + std::to_string(facts.size()) + "):\n";
     for(Predicate* fact:facts){
-        result += (" " + fact->toString() + "\n");
+        result += (" " + fact->toString() + ".\n");
     }
 
     /*
@@ -24,7 +24,7 @@ std::string DatalogProgram::toString() {
 
     result += "Queries(" + std::to_string(queries.size()) + "):\n";
     for(Predicate* query:queries){
-        result += (" " + query->toString() + "\n");
+        result += (" " + query->toString() + "?\n");
     }
 
     result += "Domain(" + std::to_string(domain.size()) + "):\n";

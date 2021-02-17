@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include "DatalogProgram.h"
 #include "Token.h"
 #include "Predicate.h"

@@ -21,14 +21,14 @@ std::string Predicate::toString(){
     result += this->name;
     result += "(";
 
-    if(this->parameters.size() == 0){
+    if(int(this->parameters.size()) == 0){
         result += "No parameters found";
     }
 
-    for(int i = 0; i < this->parameters.size(); i++){
+    for(int i = 0; i < int(this->parameters.size()); i++){
         result += this->parameters[i]->toString();
 
-        if(i == this->parameters.size()-1){
+        if(i == int(this->parameters.size()-1)){
             //If it's the last element
             result+=")";
         } else {

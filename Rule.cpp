@@ -6,9 +6,9 @@
 std::string Rule::toString(){
     std::string result = "";
     result += (headPredicate->toString() + " :- ");
-    for (int i = 0; i < predicates.size(); i++){
+    for (int i = 0; i < int(predicates.size()); i++){
         result += predicates[i]->toString();
-        if(i < predicates.size() - 1){
+        if(i < int(predicates.size()) - 1){
             result += ",";
         } else {
             result += ".";
